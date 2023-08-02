@@ -7,7 +7,7 @@ on:
 concurrency: acceptance
 
 env:
-  OWNER: greeta-erp
+  OWNER: greeta-bank
   REGISTRY: ghcr.io
   APP_REPO: bank-api
   DEPLOY_REPO: bank-infra
