@@ -49,17 +49,12 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.techbank</groupId>
 			<artifactId>cqrs.core</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.data</groupId>
-					<artifactId>spring-data-mongodb</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
