@@ -20,56 +20,46 @@ spring:
             - Path=/employee/**
           filters:
             - RewritePath=/employee/(?<path>.*), /$\{path}
-        - id: department
-          uri: lb://department
+        - id: account-cmd
+          uri: lb://account-cmd
           predicates:
-            - Path=/department/**
+            - Path=/account-cmd/**
           filters:
-            - RewritePath=/department/(?<path>.*), /$\{path}
-        - id: organization
-          uri: lb://organization
+            - RewritePath=/account-cmd/(?<path>.*), /$\{path}
+        - id: account-query
+          uri: lb://account-query
           predicates:
-            - Path=/organization/**
+            - Path=/account-query/**
           filters:
-            - RewritePath=/organization/(?<path>.*), /$\{path}
-        - id: movie
-          uri: lb://movie
+            - RewritePath=/account-query/(?<path>.*), /$\{path}
+        - id: bank
+          uri: lb://bank
           predicates:
-            - Path=/movie/**
+            - Path=/bank/**
           filters:
-            - RewritePath=/movie/(?<path>.*), /$\{path}
+            - RewritePath=/bank/(?<path>.*), /$\{path}
   keycloak:
       server-url: http://keycloak-server:8080
   security:
     oauth2:
-      # client:
-      #   registration:
-      #     keycloak:
-      #       client-id: erp-app
-      #       scope: openid,roles
-      ##   provider:
-      #     keycloak:
-      #       issuer-uri: http://keycloak-server:8080/realms/erp-realm
-      #       authorization-uri: https://keycloak.greeta.net/realms/erp-realm/protocol/openid-connect/auth
-      #       # token-uri: https://keycloak.greeta.net/realms/erp-realm/protocol/openid-connect/token
       resourceserver:
         jwt:
-          issuer-uri: ${spring.keycloak.server-url}/realms/erp-realm
+          issuer-uri: ${spring.keycloak.server-url}/realms/bank-realm
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 
 jwt:
   auth:
     converter:
-      resource-id: erp-app
+      resource-id: bank-app
       principal-attribute: preferred_username
 
-erp-app:
+account-app:
   base-url: http://localhost:3000
-  redirect-url: ${erp-app.base-url}/*
+  redirect-url: ${account-app.base-url}/*
 
-movie-app:
+bank-app:
   base-url: http://localhost:3000
-  redirect-url: ${movie-app.base-url}/*
+  redirect-url: ${bank-app.base-url}/*
 
 logging:
   pattern: 

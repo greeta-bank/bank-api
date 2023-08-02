@@ -29,45 +29,51 @@ public class KeycloakInitializerRunner implements CommandLineRunner {
     @Value("${spring.keycloak.server-url}")
     private String keycloakServerUrl;
 
-    @Value("${erp-app.redirect-url}")
-    private String erpAppRedirectUrl;
+    @Value("${account-app.redirect-url}")
+    private String accountAppRedirectUrl;
 
-    @Value("${movie-app.redirect-url}")
-    private String movieAppRedirectUrl;
+    @Value("${bank-app.redirect-url}")
+    private String bankAppRedirectUrl;
+
+    @Value("${account-app.base-url}")
+    private String accountAppOrigin;
+
+    @Value("${bank-app.base-url}")
+    private String bankAppOrigin;
 
     @Override
     public void run(String... args) {
-        log.info("Initializing '{}' realm in Keycloak ...", ERP_REALM_NAME);
+        log.info("Initializing '{}' realm in Keycloak ...", BANK_REALM_NAME);
 
         Optional<RealmRepresentation> representationOptional = keycloakAdmin.realms()
                 .findAll()
                 .stream()
-                .filter(r -> r.getRealm().equals(ERP_REALM_NAME))
+                .filter(r -> r.getRealm().equals(BANK_REALM_NAME))
                 .findAny();
         if (representationOptional.isPresent()) {
-            log.info("Removing already pre-configured '{}' realm", ERP_REALM_NAME);
-            keycloakAdmin.realm(ERP_REALM_NAME).remove();
+            log.info("Removing already pre-configured '{}' realm", BANK_REALM_NAME);
+            keycloakAdmin.realm(BANK_REALM_NAME).remove();
         }
 
         // Realm
         RealmRepresentation realmRepresentation = new RealmRepresentation();
-        realmRepresentation.setRealm(ERP_REALM_NAME);
+        realmRepresentation.setRealm(BANK_REALM_NAME);
         realmRepresentation.setEnabled(true);
         realmRepresentation.setRegistrationAllowed(true);
 
         // Client
         ClientRepresentation clientRepresentation = new ClientRepresentation();
-        clientRepresentation.setClientId(ERP_APP_CLIENT_ID);
+        clientRepresentation.setClientId(BANK_APP_CLIENT_ID);
         clientRepresentation.setImplicitFlowEnabled(true);
         clientRepresentation.setDirectAccessGrantsEnabled(true);
         clientRepresentation.setPublicClient(true);
-        clientRepresentation.setRedirectUris(List.of(erpAppRedirectUrl, movieAppRedirectUrl));
-        //clientRepresentation.setWebOrigins(List.of("*"));
-        clientRepresentation.setDefaultRoles(new String[]{WebSecurityConfig.ERP_USER});
+        clientRepresentation.setRedirectUris(List.of(bankAppRedirectUrl, accountAppRedirectUrl));
+        clientRepresentation.setWebOrigins(List.of(bankAppOrigin, accountAppOrigin));
+        clientRepresentation.setDefaultRoles(new String[]{WebSecurityConfig.BANK_USER});
         realmRepresentation.setClients(List.of(clientRepresentation));
 
         // Users
-        List<UserRepresentation> userRepresentations = ERP_APP_USERS.stream()
+        List<UserRepresentation> userRepresentations = BANK_APP_USERS.stream()
                 .map(userPass -> {
                     // User Credentials
                     CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
@@ -90,29 +96,29 @@ public class KeycloakInitializerRunner implements CommandLineRunner {
         keycloakAdmin.realms().create(realmRepresentation);
 
         // Testing
-        UserPass admin = ERP_APP_USERS.get(0);
+        UserPass admin = BANK_APP_USERS.get(0);
         log.info("Testing getting token for '{}' ...", admin.username());
 
         Keycloak keycloakErpApp = KeycloakBuilder.builder().serverUrl(keycloakServerUrl)
-                .realm(ERP_REALM_NAME).username(admin.username()).password(admin.password())
-                .clientId(ERP_APP_CLIENT_ID).build();
+                .realm(BANK_REALM_NAME).username(admin.username()).password(admin.password())
+                .clientId(BANK_APP_CLIENT_ID).build();
 
         log.info("'{}' token: {}", admin.username(), keycloakErpApp.tokenManager().grantToken().getToken());
-        log.info("'{}' initialization completed successfully!", ERP_REALM_NAME);
+        log.info("'{}' initialization completed successfully!", BANK_REALM_NAME);
     }
 
     private Map<String, List<String>> getClientRoles(UserPass userPass) {
         List<String> roles = new ArrayList<>();
-        roles.add(WebSecurityConfig.ERP_USER);
+        roles.add(WebSecurityConfig.BANK_USER);
         if ("admin".equals(userPass.username())) {
-            roles.add(WebSecurityConfig.ERP_MANAGER);
+            roles.add(WebSecurityConfig.BANK_MANAGER);
         }
-        return Map.of(ERP_APP_CLIENT_ID, roles);
+        return Map.of(BANK_APP_CLIENT_ID, roles);
     }
 
-    private static final String ERP_REALM_NAME = "erp-realm";
-    private static final String ERP_APP_CLIENT_ID = "erp-app";
-    private static final List<UserPass> ERP_APP_USERS = Arrays.asList(
+    private static final String BANK_REALM_NAME = "bank-realm";
+    private static final String BANK_APP_CLIENT_ID = "bank-app";
+    private static final List<UserPass> BANK_APP_USERS = Arrays.asList(
             new UserPass("admin", "admin"),
             new UserPass("user", "user"));
 
