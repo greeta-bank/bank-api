@@ -12,7 +12,7 @@ spring:
   sql:
     init:
       mode: ALWAYS
-      schema-locations: classpath:init-schema.sql,classpath:init-data.sql
+      schema-locations: classpath:backup/init-schema.sql,classpath:backup/init-data.sql
   output:
     ansi:
       enabled: ALWAYS
