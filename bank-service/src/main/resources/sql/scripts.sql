@@ -1,7 +1,5 @@
 use eazybank;
 
-drop table `customer`;
-drop table `accounts`;
 drop table `account_transactions`;
 drop table `authorities`;
 drop table `loans`;
@@ -9,6 +7,8 @@ drop table `cards`;
 drop table `notice_details`;
 drop table `contact_messages`;
 drop table `authorities`;
+drop table `accounts`;
+drop table `customer`;
 
 CREATE TABLE `customer` (
   `customer_id` int NOT NULL AUTO_INCREMENT,
