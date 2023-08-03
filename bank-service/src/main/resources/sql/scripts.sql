@@ -1,14 +1,14 @@
 use eazybank;
 
-drop table `account_transactions`;
-drop table `authorities`;
-drop table `loans`;
-drop table `cards`;
-drop table `notice_details`;
-drop table `contact_messages`;
-drop table `authorities`;
-drop table `accounts`;
-drop table `customer`;
+drop table if exists `account_transactions`;
+drop table if exists `authorities`;
+drop table if exists `loans`;
+drop table if exists `cards`;
+drop table if exists `notice_details`;
+drop table if exists `contact_messages`;
+drop table if exists `authorities`;
+drop table if exists `accounts`;
+drop table if exists `customer`;
 
 CREATE TABLE `customer` (
   `customer_id` int NOT NULL AUTO_INCREMENT,
