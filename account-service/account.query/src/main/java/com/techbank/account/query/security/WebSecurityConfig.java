@@ -1,4 +1,4 @@
-package com.techbank.account.cmd.security;
+package com.techbank.account.query.security;
 
 import com.techbank.account.query.security.JwtAuthConverter;
 import lombok.RequiredArgsConstructor;
