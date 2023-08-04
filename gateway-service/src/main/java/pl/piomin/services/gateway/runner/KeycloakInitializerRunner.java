@@ -86,6 +86,7 @@ public class KeycloakInitializerRunner implements CommandLineRunner {
                     userRepresentation.setEnabled(true);
                     userRepresentation.setCredentials(List.of(credentialRepresentation));
                     userRepresentation.setClientRoles(getClientRoles(userPass));
+                    userRepresentation.setEmail(userPass.email());
 
                     return userRepresentation;
                 })
@@ -119,9 +120,9 @@ public class KeycloakInitializerRunner implements CommandLineRunner {
     private static final String BANK_REALM_NAME = "bank-realm";
     private static final String BANK_APP_CLIENT_ID = "bank-app";
     private static final List<UserPass> BANK_APP_USERS = Arrays.asList(
-            new UserPass("admin", "admin"),
-            new UserPass("user", "user"));
+            new UserPass("admin", "admin", "happy@example.com"),
+            new UserPass("user", "user", "user@example.com"));
 
-    private record UserPass(String username, String password) {
+    private record UserPass(String username, String password, String email) {
     }
 }
