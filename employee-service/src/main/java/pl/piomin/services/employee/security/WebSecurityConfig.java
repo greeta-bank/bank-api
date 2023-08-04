@@ -23,10 +23,10 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
-                .requestMatchers(HttpMethod.GET, "/employee", "/employee/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
-                .requestMatchers("/employee", "/employee/**").hasRole(ERP_MANAGER)
                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "", "/", "/**").permitAll()
+                .requestMatchers("/", "/**").hasRole(BANK_MANAGER)
                 .anyRequest().authenticated();
         http.oauth2ResourceServer()
                 .jwt()
@@ -36,16 +36,5 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-    /*@Bean
-    public JwtDecoder jwtDecoder(@Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}") String jwkSetUri,
-                                 @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}") String jwkIssuerUri) {
-        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withJwkSetUri(jwkSetUri).jwsAlgorithm(SignatureAlgorithm.RS256).build();
-        jwtDecoder.setClaimSetConverter(claims -> {
-            claims.put("iss", jwkIssuerUri);
-            return claims;
-        });
-        return jwtDecoder;
-    }*/
-
-    public static final String ERP_MANAGER = "ERP_MANAGER";
+    public static final String BANK_MANAGER = "BANK_MANAGER";
 }
